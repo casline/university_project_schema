@@ -1,0 +1,38 @@
+-- The average grade that is given by each professor
+SELECT professors_name AS "Prof", AVG(grades_value) AS "Given Grade"
+FROM courses 
+JOIN professors 
+ON courses_professors_id = professors_id
+JOIN grades 
+ON grades_courses_id = courses_id
+GROUP BY professors_name;
+
+-- The top grades for each student
+SELECT grades_students_name AS 'Student', MAX(grades_value) AS 'Highest Grade'
+FROM grades
+GROUP BY grades_students_name;
+
+-- Group students by the courses that they are enrolled in
+SELECT courses_name AS 'Enrolled', students_name AS 'Student'
+FROM courses
+JOIN students
+ON courses_students_id = students_id
+ORDER BY courses_name, students_name;
+
+-- Create a summary report of courses and their average grades, 
+-- sorted by the most challenging course (course with the lowest average grade) 
+-- to the easiest course
+SELECT grades_courses_name AS 'Course', AVG(grades_value) AS 'Avg Grade'
+FROM grades
+GROUP BY grades_courses_name
+ORDER BY AVG(grades_value)ASC;
+
+-- Finding which student and professor have the most courses in common
+SELECT students_name AS 'Student', professors_name AS 'Teacher', professors_teach AS 'Classes Taught'
+FROM students
+JOIN professors
+ON professors_id = professors_id
+JOIN courses
+ON courses_students_id = students_id
+GROUP BY students_name, professors_name, professors_teach
+HAVING COUNT(*) > 1;
